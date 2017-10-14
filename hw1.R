@@ -20,7 +20,7 @@ rm(list = ls())
 #   fahrenheit: the temperature in degrees Fahrenheit
 # Value: the equivalent temperature in degrees Celsius
 celsius = function(fahrenheit) {
-  # ...
+  return ((fahrenheit-32)*5/9)
 }
 stopifnot(isTRUE(all.equal(celsius(32), 0)))
 stopifnot(isTRUE(all.equal(celsius(212), 100)))
@@ -32,7 +32,10 @@ stopifnot(isTRUE(all.equal(celsius(212), 100)))
 #   "positive"
 # according to the sign of n.
 sign.string = function(n) {
-  # ...
+  if(n<0){
+    return ("negative")}else if(n==0){
+    return ("zero")}else{
+      return ("positive")}
 }
 stopifnot(sign.string(-2) == "negative")
 stopifnot(sign.string( 0) == "zero")
@@ -53,7 +56,17 @@ stopifnot(sign.string( 3) == "positive")
 #
 # Use "if ... else if ... else".
 letter.grade = function(score) {
-  # ...
+  if(score>=90 & score<=100){
+    return ("A")
+  }else if(score>=80 & score<90){
+    return ("B")
+  }else if (score>=70 & score<80){
+    return ("C")
+  }else if (score>=60 & score<70){
+    return ("D")
+  }else if (score>=0 & score<60){
+    return ('F')
+  }
 }
 stopifnot(letter.grade(100) == "A")
 stopifnot(letter.grade( 95) == "A")
@@ -68,7 +81,7 @@ stopifnot(is.null(letter.grade( -3))) # "... == NULL" doesn't do the right thing
 # Write a function "discriminant()" that takes three numeric parameters,
 # a, b, and c, and returns b^2 - 4ac.
 discriminant = function(a, b, c) {
-  # ...
+ return (b^2-4*a*c)
 }
 stopifnot(isTRUE(all.equal(discriminant(0, 0,  0), 0)))
 stopifnot(isTRUE(all.equal(discriminant(0, 0,  1), 0)))
@@ -96,7 +109,14 @@ stopifnot(isTRUE(all.equal(discriminant(-1, -1,  -1), -3)))
 #
 # Note: Call your discriminant() function to get the discriminant.
 quadratic.formula = function(a, b, c) {
-  # ...
+  if (a==0){
+    return (NULL)}else if (discriminant(a,b,c)<0){
+    return(numeric(0))}else{
+      return(   c(  (-b-sqrt(discriminant(a,b,c)))/(2*a)    , (-b+sqrt(discriminant(a,b,c)))/(2*a)   )      )
+      
+      
+    }
+  
 }
 stopifnot(isTRUE(all.equal(quadratic.formula(0, 0,  0), NULL)))
 stopifnot(isTRUE(all.equal(quadratic.formula(1, 0,  1), numeric(0))))
@@ -137,7 +157,19 @@ stopifnot(isTRUE(all.equal(quadratic.formula(1, 1, -6), c(-3, 2))))
 # "must" statements above.)
 #
 baby.prop.test = function (x, n, p, conf.level = 0.95) {
-  # ...
+  p.hat = x / n
+  z = (p.hat - p) / sqrt(p*(1-p)/n)
+  alpha=(1-conf.level)/2
+  lconf=qnorm(alpha)
+  uconf=-lconf
+  l=p.hat-uconf*sqrt(p.hat*(1-p.hat)/n)
+  u=p.hat+uconf*sqrt(p.hat*(1-p.hat)/n)
+  p.value=2*(1-pnorm(abs(z)))
+  null.value=p
+  return (list(statistic=z,p.value=p.value,conf.int=c(l,u),estimate=p.hat,null.value=p))
+  
+  
+  
 }
 # test case
 baby.prop = baby.prop.test(72, 100, .7, conf.level=.99)
