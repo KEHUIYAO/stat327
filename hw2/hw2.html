@@ -1,0 +1,184 @@
+<p>(You should start with the &quot;.Rmd&quot; file that produced what you're reading: <a href="hw2.Rmd">hw2.Rmd</a>. But this HTML version is easier to read.)</p>
+<h1 id="stat-327-homework-2">STAT 327 Homework 2</h1>
+<p>We will grade your homework by</p>
+<ul>
+<li>opening your &quot;.Rmd&quot; file in RStudio in a directory (folder) containing the data file(s)</li>
+<li>clicking &quot;Knit HTML&quot;</li>
+<li>reading the HTML output</li>
+<li>reading your &quot;.Rmd&quot; file</li>
+<li>running source("hw2grocery.R") to test your Part 4 (below)</li>
+</ul>
+<p>You should write R code in the existing R code chunks.</p>
+<p>Include reasonable titles and labels with each of your graphs.</p>
+<h3 id="name-...">Name: ...</h3>
+<h3 id="email-...">Email: ...</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list =</span> <span class="kw">ls</span>())  <span class="co"># remove all variables</span>
+<span class="kw">layout</span>(<span class="dv">1</span>)  <span class="co"># set graphical device to default state</span>
+<span class="kw">par</span>(<span class="dt">pty =</span> <span class="st">&quot;m&quot;</span>)  <span class="co"># set graphical device to default state</span></code></pre>
+<h2 id="part-1-write-the-floor.log2-function-described-in-the-comments-above-its-function-stub-below.">Part 1: Write the floor.log2() function described in the comments above its function stub, below.</h2>
+<pre><code># Description: floor.log2(n) computes the largest integer exponent, e,
+# such that 2^e &lt;= n. That is, it computes floor(log(n, base=2)).
+#
+# Usage: floor.log2(n)
+# Parameter: n, a number (must be &gt;= 1)
+# Value: floor(log(n, base=2)
+# Examples:
+#   floor.log2(1) is 0
+#   floor.log2(2) is 1
+#   floor.log2(3) is 1
+#   floor.log2(4) is 2
+#   floor.log2(5) is 2
+#   floor.log2(6) is 2
+#   floor.log2(7) is 2
+#   floor.log2(8) is 3
+# (Use a loop to accumulate a product. You may not use &quot;^&quot; or log(),
+# etc. Use stopifnot() to check the argument according to the &quot;must&quot;
+# statement above.)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">floor.log2 = function(n) {
+    <span class="co"># ... your code here</span>
+    
+}</code></pre>
+<p>Add code to confirm that floor.log2(n) matches floor(log(n, base=2)) on integer inputs from 1 to 1000.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ... your code here</span></code></pre>
+<h2 id="part-2-run-a-monte-carlo-simulation-to-estimate-pi.">Part 2: Run a Monte Carlo simulation to estimate pi.</h2>
+<p>Here we estimate pi by the method discussed at <a href="https://en.wikipedia.org/wiki/Monte_Carlo_integration">https://en.wikipedia.org/wiki/Monte_Carlo_integration</a>. All you need to read there is the first paragraph and the first figure and its caption. We will do this with the help of two functions:</p>
+<ul>
+<li>magnitude(x, y), a helper function to be called by monte.carlo.pi(), below, that returns the distance of the point (x, y) to the origin</li>
+<li>monte.carlo.pi(n , draw=FALSE), which estimates pi from n random points and optionally draws a picture of the simulation</li>
+</ul>
+<pre><code># Description: magnitude returns the distance a of point (x, y) from
+#   the origin (or a vector of such distances if x and y are vectors).
+# Usage: magnitude(x, y)
+# Arguments:
+#   x: x-coordinate of one point (or x-coordinates of several points)
+#   y: y-coordinate of one point (or y-coordinates of several points)
+#      (must have same length as x)
+# Value: distance(s) of (x, y) from the origin.
+# Hint: don&#39;t forget to check that x and y have the same length.</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">magnitude = function(x, y) {
+    <span class="co"># ... your code here</span>
+    
+}</code></pre>
+<p>Here are some test cases. Correct your magnitude() code if it fails any of these tests.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># First are several tests, each passing just one (x, y) point.</span>
+<span class="kw">stopifnot</span>(<span class="kw">isTRUE</span>(<span class="kw">all.equal</span>(<span class="kw">magnitude</span>(<span class="dv">3</span>, <span class="dv">4</span>), <span class="dv">5</span>)))</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stopifnot</span>(<span class="kw">isTRUE</span>(<span class="kw">all.equal</span>(<span class="kw">magnitude</span>(<span class="dv">3</span>, -<span class="dv">4</span>), <span class="dv">5</span>)))</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stopifnot</span>(<span class="kw">isTRUE</span>(<span class="kw">all.equal</span>(<span class="kw">magnitude</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="dv">0</span>)))</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stopifnot</span>(<span class="kw">isTRUE</span>(<span class="kw">all.equal</span>(<span class="kw">magnitude</span>(-<span class="dv">1</span>, <span class="dv">1</span>), <span class="kw">sqrt</span>(<span class="dv">2</span>))))</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Second is a test passing vectors of points (x, y). (Note that R&#39;s</span>
+<span class="co"># arithmetic operators act on vectors, so a loop in magnitude() is not</span>
+<span class="co"># necessary to handle this test case.)</span>
+test.x = <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">0</span>, -<span class="dv">1</span>, <span class="dv">5</span>)
+test.y = <span class="kw">c</span>(<span class="dv">4</span>, -<span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">12</span>)
+test.mag = <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">0</span>, <span class="kw">sqrt</span>(<span class="dv">2</span>), <span class="dv">13</span>)
+<span class="kw">stopifnot</span>(<span class="kw">isTRUE</span>(<span class="kw">all.equal</span>(<span class="kw">magnitude</span>(test.x, test.y), test.mag)))</code></pre>
+<pre><code># Description: monte.carlo.pi estimates pi by simulation.
+# Usage: monte.carlo.pi(n, draw=FALSE)
+# Arguments:
+#   n: number of random points to use
+#   draw: logical, whether or not to draw a graph of the simulation
+#     consisting of the n points and the unit circle.
+# Details: The simulation proceeds by getting n random points {(x, y)}
+#   in the square defined by -1 &lt; x &lt; 1 and -1 &lt; y &lt; 1, and then
+#   counting how many of those points are within a radius 1 of (0, 0).
+#   We can use
+#     (area of circle)/(area of square) = pi*r^2  / (2r)^2
+#                                       = pi(1^2) / (2*1)^2, since r=1
+#                                       = pi/4
+#   so
+#     pi = 4*(area of circle)/(area of square)
+#        =~ 4*(#points in circle) / (#points in square)
+# Value: an estimate of pi.
+# Hints:
+#   - ?runif tells how to get random coordinates in the range (-1, 1)
+#   - You can see a picture like the required drawing at the top of
+#     http://en.wikipedia.org/wiki/Monte_Carlo_Integration. (Don&#39;t
+#     worry if you don&#39;t understand the article, which isn&#39;t easy.)
+#   - Using R&#39;s base graphics, you can plot the points via plot(x, y).
+#   - One way to draw the circle is to get a sequence of angles (in
+#     radians) from 0 to 2*pi, and then use x coordinate cos(angle)
+#     and y coordinate sin(angle).</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">monte.carlo.pi = function(n, <span class="dt">draw =</span> <span class="ot">FALSE</span>) {
+    <span class="co"># ... your code here</span>
+    
+}
+<span class="kw">cat</span>(<span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, <span class="st">&quot;monte.carlo.pi(1000)=&quot;</span>, <span class="kw">monte.carlo.pi</span>(<span class="dv">1000</span>), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)  <span class="co"># get estimate</span></code></pre>
+<pre><code>## monte.carlo.pi(1000)=</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">monte.carlo.pi</span>(<span class="dv">1000</span>, <span class="ot">TRUE</span>)  <span class="co"># make graph</span></code></pre>
+<pre><code>## NULL</code></pre>
+<p>Finally, make a graph to show the distribution of pi estimates for n=100 and n=1000. Use replicate() to get 500 pi estimates using n=100 each time. Then use replicate() to get 500 pi estimates using n=1000 each time. Draw a graph comparing these two distributions. (You can use a reasonable graph of your choice.)</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ... your code here</span></code></pre>
+<h2 id="part-3-practice-with-apply-family-of-functions.">Part 3: Practice with apply() family of functions.</h2>
+<p>Three functions are provided in &quot;hw4freeCode.R&quot;. Read through that file quickly, and then use its functions below. R Markdown will read them into the current session here:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;hw2freeCode.R&quot;</span>)  <span class="co"># Don&#39;t change this line.</span></code></pre>
+<p>The file &quot;scores.csv&quot; contains simulated scores data for a statistics course. Some of its column names are abbreviations:</p>
+<ul>
+<li>&quot;Poss&quot; means &quot;Possible&quot; (total points possible)</li>
+<li>&quot;Pct&quot; means &quot;Percentage&quot;</li>
+<li>&quot;Pctile&quot; means &quot;Percentile&quot;</li>
+</ul>
+<p>Read the file into a data frame.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ... your code here</span></code></pre>
+<p>Add three columns to the &quot;scores&quot; data frame:</p>
+<ul>
+<li>Pct.gr (&quot;gr&quot; abbreviates &quot;grade&quot;), the letter grade given by the PercentageGrade() function on the Pct column. Hint: use sapply()</li>
+<li>Pctile.gr, the letter grade given by the PercentileGrade() function on the Pctile column.</li>
+<li>Grade, the letter grade given by the CourseGrade() function on your first two new columns. Hint: use mapply(). By default, it will return a named character (string) vector. You can get rid of the names with one of</li>
+<li>USE.NAMES=FALSE as a mapply() argument</li>
+<li>names(x) = NULL on the returned vector</li>
+<li>as.character() on the returned vector</li>
+</ul>
+<p>Then display the new data frame.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ... your code here</span></code></pre>
+<p>Display the average E1 score, rounded to one place after the decimal point, for each group of students with the same course grade. (There should be an average E1 score for the A students, an average for the AB students, etc.) Hint: use tapply().</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ... your code here</span></code></pre>
+<p>Display the average score (across all students) for each quiz (column). That is, display four quiz averages. Hint: use apply().</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ... your code here</span></code></pre>
+<p>Display the average quiz score (across Q1 through Q4) for each student (row). That is, display 25 student averages. Hint: use apply().</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ... your code here</span></code></pre>
+<h2 id="part-4-manage-a-grocery-list.">Part 4: Manage a grocery list.</h2>
+<p>Write an R script called &quot;hw2grocery.R&quot; that helps with grocery shopping by running through a list of candidate groceries and their prices, getting user input on each item, and then making a shopping list. Here's a sample session run with a budget of ten dollars:</p>
+<pre><code>&gt; source(&quot;hw2grocery.R&quot;)
+          item price
+1      spinach   2.0
+2         rice   3.0
+3 toilet paper   4.0
+4        bread   2.4
+5         milk   3.1
+6        apple   0.4
+How many spinach?
+1: 2
+How many rice?
+1: 1
+How many bread?
+1: 1
+How many apple?
+1: 2
+  ERROR: too many for the budget
+How many apple?
+1: 1
+     item price quantity
+1 spinach   2.0        2
+2    rice   3.0        1
+3   bread   2.4        1
+4   apple   0.4        1
+Your bill is $9.8
+&gt;</code></pre>
+<p>There are three pieces of code to write to solve Part 4.</p>
+<h3 id="part-4.1-write-a-how.many-function">Part 4.1: write a how.many() function</h3>
+<p>First, write a helper function, how.many, that takes two arguments, item (character string) and n.max (numeric). Display the prompt, &quot;How many item?&quot;, and then require the user to enter desired number of item, an integer between 0 and n.max. (Assume the user will enter a nonnegative integer.) If user enters a number larger than n.max, display the message, &quot; ERROR: too many for the budget&quot; and start again. Return the user's number. For example, the call how.many(&quot;apple&quot;, 4) prints &quot;How many apple?&quot; and returns a number chosen by the user between 0 and 4.</p>
+<h3 id="part-4.2-write-a-grocery.list-function">Part 4.2: write a grocery.list() function</h3>
+<p>Second, write a function, grocery.list, that takes two arguments, file (a character string file name) and budget (numeric). From file, read a grocery price list containing items and prices, like this:</p>
+<pre><code>spinach,2.00
+rice,3.00
+toilet paper,4.00
+bread,2.40
+milk,3.10
+apple,0.40</code></pre>
+<p>Display the price list. Loop through it asking how many of each item should be purchased. (Use your how.many() function.)</p>
+<p>budget is the maximum amount that can be spent. Do not accept a user's number of an item if it causes the budget to be exceeded. Do not display an item at all if its price is higher than the remaining budget.</p>
+<p>Return a data frame consisting of three columns, &quot;item&quot;, &quot;price&quot;, and &quot;quantity&quot;, and those rows with nonzero quantities.</p>
+<h3 id="part-4.3-call-your-grocery.list-function">Part 4.3: call your grocery.list() function</h3>
+<p>Third, write a few lines of code to call your grocery.list() on a &quot;groceries.csv&quot; file with a budget of $10. Print the returned shopping list (data frame) along with the total bill, in a line of the form, &quot;Your bill is $n&quot;, where n is a number.</p>
+<h3 id="part-4-grading-note">Part 4 grading note</h3>
+<p>We'll grade this part of your homework by running source(&quot;hw2grocery.R&quot;) in a directory containing a &quot;groceries.csv&quot; grocery price list file (which may be different from the one you used), giving user input, checking your output, and reading your code. To make it possible partly to automate grading, your output strings should exactly match the specified output strings.</p>
