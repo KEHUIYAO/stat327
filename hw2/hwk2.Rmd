@@ -50,7 +50,14 @@ par(pty="m")    # set graphical device to default state
 
 ```{r}
 floor.log2 = function(n) {
-  # ... your code here
+  if (n<2) return (0)
+  tmp=2
+  count=0
+  while (tmp<=n){
+    tmp=tmp*2
+    count=count+1
+  }
+  return (count)
 
 }
 ```
@@ -59,7 +66,9 @@ Add code to confirm that floor.log2(n) matches floor(log(n, base=2))
 on integer inputs from 1 to 1000.
 
 ```{r}
-# ... your code here
+for (i in 1:1000){
+  stopifnot(floor.log2(i)==floor(log(i, base=2)))
+}
 
 ```
 
@@ -87,7 +96,7 @@ its caption. We will do this with the help of two functions:
 
 ```{r}
 magnitude = function(x, y) {
-  # ... your code here
+  sqrt(x^2+y^2)
 
 }
 ```
@@ -139,7 +148,21 @@ stopifnot(isTRUE(all.equal(magnitude(test.x, test.y), test.mag)))
 
 ```{r}
 monte.carlo.pi = function(n, draw=FALSE) {
-  # ... your code here
+  x=runif(n,-1,1)
+  y=runif(n,-1,1)
+  result=apply(cbind(x,y),1,function(x) magnitude(x[1],x[2]))
+  pihat=sum(result<=1)/n*4
+  
+  if (draw==TRUE){
+    par(pty="s")
+    plot(x=x,y=y)
+    a=seq(0,2*pi,length.out = 1000)
+    xx=cos(a)
+    yy=sin(a)
+    points(xx,yy)
+  }
+  
+  return (pihat)
 
 }
 cat(sep="", "monte.carlo.pi(1000)=", monte.carlo.pi(1000), "\n") # get estimate
@@ -153,7 +176,12 @@ each time. Draw a graph comparing these two distributions.  (You can
 use a reasonable graph of your choice.)
 
 ```{r}
-# ... your code here
+a=replicate(n = 500,expr = monte.carlo.pi(100))
+hist(a,probability = T,col=2,border=F,xlab='pihat', main='Comparision')
+#b<-dnorm(a,mean=mean(a),sd=sd(a)) 
+b=replicate(n = 500,expr = monte.carlo.pi(1000))
+hist(b,probability = T,add=T,col=3)
+legend(x=3.3,y=2.5,legend = c("100","500"),col = c("red","green"),lwd=c(1,1))
 
 ```
 
@@ -177,7 +205,7 @@ course. Some of its column names are abbreviations:
 Read the file into a data frame.
 
 ```{r}
-# ... your code here
+scores=read.csv("scores.csv",header = T)
 
 ```
 
@@ -198,8 +226,10 @@ names with one of
 Then display the new data frame.
 
 ```{r}
-# ... your code here
-
+scores$Pct.gr=sapply(scores$Pct,PercentageGrade)
+scores$Pctile.gr=sapply(scores$Pctile,PercentileGrade)
+scores$Grade=mapply(x=scores$Pct.gr,y=scores$Pctile.gr,FUN = CourseGrade,USE.NAMES = FALSE)
+scores
 ```
 
 Display the average E1 score, rounded to one place after the decimal
@@ -208,7 +238,7 @@ should be an average E1 score for the A students, an average for the
 AB students, etc.) Hint: use tapply().
 
 ```{r}
-# ... your code here
+round(tapply(scores$E1,scores$Grade,mean),1)
 
 ```
 
@@ -216,7 +246,7 @@ Display the average score (across all students) for each quiz
 (column). That is, display four quiz averages. Hint: use apply().
 
 ```{r}
-# ... your code here
+apply(scores[c("Q1","Q2","Q3","Q4")],2,mean)
 
 ```
 
@@ -224,8 +254,7 @@ Display the average quiz score (across Q1 through Q4) for each student
 (row). That is, display 25 student averages. Hint: use apply().
 
 ```{r}
-# ... your code here
-
+apply(scores[c("Q1","Q2","Q3","Q4")],1,mean)
 ```
 
 ## Part 4: Manage a grocery list.
@@ -277,6 +306,22 @@ display the message, " ERROR: too many for the budget" and start
 again. Return the user's number. For example, the call
 how.many("apple", 4) prints "How many apple?" and returns a number
 chosen by the user between 0 and 4.
+```{r}
+how.many=function(item,n.max){
+  sign=TRUE
+  while (sign){
+    cat("how many ",item,"?",'\n',sep = '')
+  
+    input=scan(nmax = 1,quiet = TRUE)
+    if (input>n.max){
+      cat("ERROR: too many for the budget \n")
+    }
+    sign=FALSE
+  }
+  
+  
+}
+```
 
 
 ### Part 4.2: write a grocery.list() function

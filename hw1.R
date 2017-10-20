@@ -1,5 +1,5 @@
-# Name: ...
-# Email: ...
+# Name: KEHUIYAO
+# Email: kyao24@wisc.edu
 
 # We'll grade your homework by running
 #   source("hw1.R")
