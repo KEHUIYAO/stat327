@@ -306,22 +306,6 @@ display the message, " ERROR: too many for the budget" and start
 again. Return the user's number. For example, the call
 how.many("apple", 4) prints "How many apple?" and returns a number
 chosen by the user between 0 and 4.
-```{r}
-how.many=function(item,n.max){
-  sign=TRUE
-  while (sign){
-    cat("how many ",item,"?",'\n',sep = '')
-  
-    input=scan(nmax = 1,quiet = TRUE)
-    if (input>n.max){
-      cat("ERROR: too many for the budget \n")
-    }
-    sign=FALSE
-  }
-  
-  
-}
-```
 
 
 ### Part 4.2: write a grocery.list() function
@@ -356,6 +340,9 @@ Third, write a few lines of code to call your grocery.list() on a
 "groceries.csv" file with a budget of $10. Print the returned shopping
 list (data frame) along with the total bill, in a line of the form,
 "Your bill is $n", where n is a number.
+
+
+
 
 ### Part 4 grading note
 
