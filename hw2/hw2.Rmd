@@ -155,7 +155,8 @@ monte.carlo.pi = function(n, draw=FALSE) {
   
   if (draw==TRUE){
     par(pty="s")
-    plot(x=x,y=y)
+    plot(x[result>1],y[result>1],col="red")
+    points(x[result<=1],y[result<=1],col="blue")
     a=seq(0,2*pi,length.out = 1000)
     xx=cos(a)
     yy=sin(a)
@@ -181,6 +182,8 @@ hist(a,probability = T,col=2,border=F,xlab='pihat', main='Comparision')
 #b<-dnorm(a,mean=mean(a),sd=sd(a)) 
 b=replicate(n = 500,expr = monte.carlo.pi(1000))
 hist(b,probability = T,add=T,col=3)
+lines(density(a),col=2)
+lines(density(b),col=3)
 legend(x=3.3,y=2.5,legend = c("100","500"),col = c("red","green"),lwd=c(1,1))
 
 ```

@@ -7,6 +7,7 @@ how.many=function(item,n.max){
       cat("ERROR: too many for the budget \n")
       cat("How many ",item,"?",'\n',sep = '')
       input=scan(nmax = 1,quiet = TRUE)
+  
       next()
     }
     sign=FALSE
@@ -16,10 +17,12 @@ how.many=function(item,n.max){
 }
 
 grocery.list=function(file,budget){
+  all_budget=as.numeric(budget)
   price_list=read.csv(file,header = F)
   
   colnames(price_list)=c("item","price")
   print(price_list)
+  cat("\n")
   price_list$item=as.character(price_list$item)
   price_list$quantity=0
   for (i in 1:nrow(price_list)){
@@ -30,6 +33,10 @@ grocery.list=function(file,budget){
       n.max=floor(budget/tmp$price)
       price_list$quantity[i]=how.many(tmp$item,n.max)
       budget=budget-price_list$quantity[i]*tmp$price
+      bill=all_budget-budget
+      cat("Your bill is ",bill,"\n",sep='')
+      cat("Your budget remains ",budget,"\n",sep='')
+      cat("\n")
     }
   }
   
