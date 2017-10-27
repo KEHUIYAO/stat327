@@ -1,5 +1,5 @@
-# Name: ...
-# Email: ...
+# Name: KEHUI YAO
+# Email:kyao24@wisc.edu
 
 rm(list = ls())
 
@@ -23,8 +23,18 @@ four.in.a.row = function(player, v, debug=FALSE) {
   if (debug) {
     cat(sep="", "four.in.a.row(player=", player, ", v=", v, ")\n")
   }
-  # ...
-  return(FALSE) # correct this return() statement
+  total.set.length=length(v)-3
+  if (total.set.length<1) return (FALSE)
+  total.set=list()
+  for (i in 1:total.set.length){
+    total.set[[i]]=v[i:(i+3)]
+  }
+  test.set=rep(player,4)
+  test.result=unlist(lapply(total.set,function(x){
+    if(sum(test.set==x)==4){return (TRUE)}else{return (FALSE)}
+  }))
+  if (sum(test.result)!=0) return (TRUE)
+  return(FALSE) 
 }
 
 # Returns TRUE if (matrix) board (of character strings)
@@ -40,8 +50,17 @@ won = function(player, board, r, c, debug=FALSE) {
     print(board)
     cat(sep="", ", r=", r, ", c=", c, ")\n")
   }
-  # ...
-  return(FALSE) # correct this return() statement
+  board[r,c]=player
+  v1=board[r,]
+  v2=board[,c]
+  v3=board[row(board)-col(board)==r-c]
+  v4=board[row(board)+col(board)==r+c]
+  
+  judge.list=list(v1,v2,v3,v4)
+  win_or_not=sum(unlist(lapply(judge.list,function(x) four.in.a.row(player,x))))
+  if (win_or_not!=0) return (TRUE)
+  
+  return(FALSE) 
 }
 
 # Returns largest index of an empty position in column col
@@ -53,8 +72,21 @@ largest.empty.row = function(board, col, debug=FALSE) {
     print(board)
     cat(sep="", ", col=", col, ")\n")
   }
-  # ...
-  return(6) # correct this return() statement
+  col.set=board[,col]
+  
+  get.index=function(x){
+    len=length(x)
+    for (i in 1:length(x)){
+      if (x[i]=="E"){next}else{
+        if((i-1)!=0){return(i-1)}else{
+          return (NULL)
+        }
+      }
+    }
+    return (len)
+  }
+  
+  return(get.index(col.set)) # correct this return() statement
 }
 
 source("hw3test.R") # Run tests on the functions above.
@@ -74,3 +106,26 @@ source("hw3test.R") # Run tests on the functions above.
 # to do much more! If your computer player beats me on its first try,
 # you will earn a package of M&Ms. This is a hard task. Feel free to
 # ask for tips.)
+
+
+plot_board=function(){
+  x=rep(1:7,each=6)
+  y=rep(1:6,times=7)
+  plot(x,y,type="n",xlim=c(0,8),ylim=c(7,0))
+  x0=c(rep(0.5,5),seq(1.5,6.5,1))
+  y0=c(seq(1.5,5.5,1),rep(0.5,6))
+  x1=c(rep(7.5,5),seq(1.5,6.5,1))
+  y1=c(seq(1.5,5.5,1),rep(6.5,6))
+  segments(x0=x0,y0=y0,x1=x1,y1=y1)
+}
+
+boards=matrix(data=rep("E",42),nrow = 6)
+for (i in 1:9){
+  cat(sep="","i=",i,", player=",player,"\n")
+  
+}
+
+
+
+
+
