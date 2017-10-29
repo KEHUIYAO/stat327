@@ -50,7 +50,7 @@ won = function(player, board, r, c, debug=FALSE) {
     print(board)
     cat(sep="", ", r=", r, ", c=", c, ")\n")
   }
-  board[r,c]=player
+  
   v1=board[r,]
   v2=board[,c]
   v3=board[row(board)-col(board)==r-c]
@@ -77,7 +77,7 @@ largest.empty.row = function(board, col, debug=FALSE) {
   get.index=function(x){
     len=length(x)
     for (i in 1:length(x)){
-      if (x[i]=="E"){next}else{
+      if (x[i]=="E"|x[i]==""){next}else{
         if((i-1)!=0){return(i-1)}else{
           return (NULL)
         }
@@ -86,7 +86,7 @@ largest.empty.row = function(board, col, debug=FALSE) {
     return (len)
   }
   
-  return(get.index(col.set)) # correct this return() statement
+  return(get.index(col.set)) 
 }
 
 source("hw3test.R") # Run tests on the functions above.
@@ -119,13 +119,52 @@ plot_board=function(){
   segments(x0=x0,y0=y0,x1=x1,y1=y1)
 }
 
-boards=matrix(data=rep("E",42),nrow = 6)
-for (i in 1:9){
-  cat(sep="","i=",i,", player=",player,"\n")
-  
+start.game=function(){
+  plot_board()
+  for (i in 1:(n_col*n_row)) {
+  if (player == "X") { # human player
+    repeat {
+      index = identify(x, y, n=1, plot=FALSE)
+      col = x[index]
+      row = y[index]
+      if (board[row, col] == "") {
+        row=largest.empty.row(board,col)
+        break
+      } else {
+        text(x=2, y=n_row+0.7, labels="Please click on empty square.")
+      }
+    }
+  } else { # computer player
+    repeat{
+      index = sample(x=which(c(board) == ""), size=1)
+      col = x[index]
+      row = largest.empty.row(board,col)
+      if (!is.null(row)) break
+    }
+  }
+  board[row, col] = player
+  text(x=col, y=row, labels=player)
+  cat(sep="", "i=", i, ", player=", player, ", index=", index,
+      ", row=", row, ", col=", col, ", board:", "\n")
+  print(board)
+  if (won(player,board,row,col,debug=TRUE)) {
+    text(x=2, y=1/3, labels=paste(player, " won!"), col="red")
+    board = matrix(data=rep("", times=n_col*n_row), nrow=n_row, ncol=n_col)
+    
+    break
+  }
+  player = ifelse(test=(player == "X"), yes="O", no="X")
+  }
 }
 
+### initial setting
+n_col=7
+n_row=6
+x = rep(1:n_col,times=n_row)
+y = rep(1:n_row, each = n_col)
+board = matrix(data=rep("", times=n_col*n_row), nrow=n_row, ncol=n_col)
+player = "X"
 
-
+start.game()
 
 
