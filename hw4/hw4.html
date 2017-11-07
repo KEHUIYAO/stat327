@@ -1,0 +1,112 @@
+<h1 id="stat-327-homework-4">STAT 327 Homework 4</h1>
+<p>We'll grade your homework by opening your &quot;hw4.Rmd&quot; file in RStudio (in a directory containing &quot;farm.csv&quot;, &quot;scores.csv&quot;, and &quot;hw4freeCode.R&quot;), clicking &quot;Knit HTML&quot;, reading the HTML output, and reading your &quot;hw4.Rmd&quot; file. You should write R code anywhere you see an empty R code chunk.</p>
+<p>Name: ...</p>
+<p>Email: ...@wisc.edu</p>
+<h1 id="part-1-a-jackknife-procedure-to-find-the-most-outlying-point-in-a-linear-relationship-between-two-variables">Part 1: A &quot;jackknife&quot; procedure to find the most outlying point in a linear relationship between two variables</h1>
+<p>First load the &quot;XML&quot; package to give access to <code>readHTMLTable()</code> and the &quot;RCurl&quot; package for access to <code>getURL()</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r">if (!<span class="kw">require</span>(<span class="st">&quot;XML&quot;</span>)) {
+    <span class="kw">install.packages</span>(<span class="st">&quot;XML&quot;</span>)  <span class="co"># do this once per lifetime</span>
+    <span class="kw">stopifnot</span>(<span class="kw">require</span>(<span class="st">&quot;XML&quot;</span>))  <span class="co"># do this once per session</span>
+}</code></pre>
+<pre><code>## Loading required package: XML</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">if (!<span class="kw">require</span>(<span class="st">&quot;RCurl&quot;</span>)) {
+    <span class="kw">install.packages</span>(<span class="st">&quot;RCurl&quot;</span>)  <span class="co"># do this once per lifetime</span>
+    <span class="kw">stopifnot</span>(<span class="kw">require</span>(<span class="st">&quot;RCurl&quot;</span>))  <span class="co"># do this once per session</span>
+}</code></pre>
+<pre><code>## Loading required package: RCurl
+## Loading required package: bitops</code></pre>
+<p>Use R to get the land area (sq. miles) of each state from the second table (labeled &quot;Land area&quot;) in the web page https://simple.wikipedia.org/wiki/List_of_U.S._states_by_area. Hint: you can use <code>tables = readHTMLTable(getURL(&quot;https://simple.wikipedia.org/wiki/List_of_U.S._states_by_area&quot;))</code> to read the data. Include code to remove the commas from the numbers.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ...</span></code></pre>
+<p>Use R to get farm areas of states from &quot;farm.csv&quot;. (Note: I got the data in 2013 from the spreadsheet in the row labeled &quot;825 - Farms--Number and Acreage by State [Excel 131k] ...&quot; at http://www.census.gov/compendia/statab/cats/agriculture/farms_and_farmland.html. I took the 2010 acreage (1000) column, multiplied by 1000, and divided by 640 (sq. miles per acre). You do not need to use this spreadsheet--just use &quot;farm.csv&quot;.)</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ...</span></code></pre>
+<p>Create a data frame called &quot;area&quot; whose columns are &quot;state&quot;, &quot;farm&quot;, and &quot;land&quot;, which contain state names, farm areas, and land areas, respectively. Hint: the states aren't in the same order in the two data sets, so getting the &quot;area&quot; data frame right requires a little care.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ...</span></code></pre>
+<p>Make a scatterplot of y = farm area vs. x = land area.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ...</span></code></pre>
+<p>There are two prominent outliers. Use <code>identify()</code> to find their indices.</p>
+<p>Unfortunately, <code>identify()</code> doesn't work on an R graph that we're viewing through an HTML page. We can use the RStudio menu command &quot;Chunks &gt; Run all&quot; to run all the code in this file in the console, and then click on the graph in RStudio's &quot;Plots&quot; tab. Once you know the indices, just assign them to variables so you can use them later. Then comment out your call to identify().</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ...</span></code></pre>
+<p>The two outliers are Texas, which fits the roughly linear trend of the rest of the data, and Alaska, which does not fit.</p>
+<p>Make a linear model of y = farm area vs. x = land area. Make your scatterplot again, and this time add the regression line to it. Then make a linear model of the same data, except with Alaska removed. Add that regression line, colored red, to your scatterplot.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ...</span></code></pre>
+<p>Notice that, with respect to the original regression line, Texas has the biggest residual (difference in actual and predicted y), because Alaska pulled the line down toward itself. But really Alaska is the outlier! Next we'll do a &quot;jackknife&quot; procedure to discover computationally that Alaska is the most important outlier.</p>
+<p>Make a plot of the residuals for the original model. (Hint: they're available in the output of <code>lm()</code>.)</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ...</span></code></pre>
+<p>Notice again that the Texas residual is bigger than the Alaska residual.</p>
+<p>Next use a loop to create n=50 models. In step i, make a model of the data with observation i removed. Then predict the value of y[i] from that model, and find the residual (difference) between (the removed) y[i] and the prediction. Save these residuals in a vector <code>r.jack</code>. (A &quot;jackknife&quot; procedure works by removing one observation (or several) from a data set, and then making a prediction from that smaller data set, and repeating this for each observation.)</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ...</span></code></pre>
+<p>Plot these &quot;jackknife&quot; residuals.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ...</span></code></pre>
+<p>Notice now that Alaska is clearly the real outlier.</p>
+<h1 id="part-2-ggplot2-graphics">Part 2: ggplot2 graphics</h1>
+<p>Use <code>ggplot2</code> to solve make several graphs. First, here's code to load, or install and load, the package.</p>
+<pre class="sourceCode r"><code class="sourceCode r">if (!<span class="kw">require</span>(<span class="st">&quot;ggplot2&quot;</span>)) {
+    <span class="kw">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>)
+    <span class="kw">stopifnot</span>(<span class="kw">require</span>(<span class="st">&quot;ggplot2&quot;</span>))
+}</code></pre>
+<pre><code>## Loading required package: ggplot2
+## Find out what&#39;s changed in ggplot2 with
+## news(Version == &quot;0.9.3.1&quot;, package = &quot;ggplot2&quot;)</code></pre>
+<ol style="list-style-type: decimal">
+<li>Consider the built-in data set <code>warpbreaks</code>. (See <code>?warpbreaks</code>, http://en.wikipedia.org/wiki/Warp_%28weaving%29, and http://en.wikipedia.org/wiki/Power_loom#Operation.) Make a histogram of the numbers of warp breaks.</li>
+</ol>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ...</span></code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Make a density plot of the numbers of warp breaks.</li>
+</ol>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ...</span></code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Make two density plots of warp breaks, using a different color for each wool type, on a single panel. Does the wool type have a strong effect on the number of breaks?</li>
+</ol>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ...</span></code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Make three density plots of warp breaks, using a different color for each tension level, on a single panel. How does tension seem to affect the number of breaks?</li>
+</ol>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ...</span></code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>&quot;Old Faithful&quot; is a geyser in Yellowstone National Park that erupts on a remarkably regular schedule (http://en.wikipedia.org/wiki/Old_Faithful). Make a scatterplot of waiting time (<span class="math"><em>y</em></span>) vs. most recent eruption time (<span class="math"><em>x</em>)</span> from the built-in <code>faithful</code> data set. (See <code>?faithful</code>.) Include a simple linear regression line. What is the most striking feature of this plot?</li>
+</ol>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ...</span></code></pre>
+<h1 id="part-3-web-scraping">Part 3: Web-scraping</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list =</span> <span class="kw">ls</span>())</code></pre>
+<p>First load the &quot;XML&quot; package to give access to <code>readHTMLTable()</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r">if (!<span class="kw">require</span>(<span class="st">&quot;XML&quot;</span>)) {
+    <span class="kw">install.packages</span>(<span class="st">&quot;XML&quot;</span>)  <span class="co"># do this once per lifetime</span>
+    <span class="kw">require</span>(<span class="st">&quot;XML&quot;</span>)  <span class="co"># do this once per session</span>
+}</code></pre>
+<p>At the bottom of the <a href="http://www.imdb.com">Internet Movie Database website</a> there's a link to the <a href="http://www.imdb.com/chart/top">Top 250</a>. At the &quot;Top 250&quot; page there's a list of 250 movies, with a link to each movie. The first movie is <a href="http://www.imdb.com/title/tt0111161/?ref_=chttp_tt_1">The Shawshank Redmption</a>.</p>
+<p>With your browser on the &quot;Top 250&quot; page, you can do &quot;right-click &gt; view page source&quot; (in Firefox or Chrome; in Safari, first do &quot;Safari &gt; Preferences &gt; Advanced&quot; and check &quot;Show Develop menu in menu bar&quot;) to see the HTML code that creates the page. (You do not need to learn HTML for this homework.)</p>
+<p>Search in the HTML source page for &quot;Shawshank&quot;, and you'll see that it occurs on line 833. Search for &quot;Godfather&quot;, and you'll see that it occurs twice, on line 873 for &quot;The Godfather&quot; and on line 913 for &quot;The Godfather: Part II&quot;. For each of these three lines, the preceding line contains a link, relative to the main IMDB URL, to that movie's page. Use grep() to figure out what small string is common to the 250 lines, like these three, that contain links to the top 250 movies.</p>
+<p>Notice that line 833 for &quot;The Shawshank Redemption&quot; includes the text &quot;/title/tt0111161&quot;. Pasting this onto &quot;http://www.imdb.com&quot; gives &quot;http://www.imdb.com/title/tt0111161&quot;, which is a link to the first movie's page. Adding &quot;/fullcredits&quot; gives &quot;http://www.imdb.com/title/tt0111161/fullcredits&quot;, which is a link to the full cast and crew. Search this &quot;fullcredits&quot; page for &quot;Produced&quot; and you'll see that &quot;The Shawshank Redemption&quot; was produced by &quot;Liz Glotter&quot;, &quot;David V. Lester&quot;, and &quot;Niki Marvin&quot;.</p>
+<p>Write code that does the following:</p>
+<ul>
+<li>Use readLines() to read &quot;http://www.imdb.com/chart/top&quot; into a character string vector
+<ul>
+<li>Select the 250 lines containing links to the 250 movies</li>
+<li>From these 250 lines, select the 250 strings like &quot;/title/tt0111161&quot; from which you can form links to the 250 movies</li>
+</ul></li>
+<li>Create an empty list of producers, e.g. &quot;producers = list()&quot;</li>
+<li>Read the &quot;fullcredits&quot; page of each movie
+<ul>
+<li>Strip out the title of the movie</li>
+<li>Use readHTMLTable() to read all the tables into a list of dataframes; figure out which dataframe has the producers</li>
+<li>Save the vector of producers in a list, doing something like &quot;producers[[title]] = ...&quot;, where &quot;...&quot; is the vector of producers you found</li>
+</ul></li>
+<li>Do &quot;unlist(producers)&quot; to convert your list of title / producer vector pairs into a named vector of producers.
+<ul>
+<li>Use table() to make a table of counts from this vector</li>
+<li>Display the 5 producers who produced the most movies from among these 250</li>
+</ul></li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ...</span></code></pre>
+<h1 id="part-4-extra-credit-not-required-worth-0-1-or-2-points">Part 4: Extra Credit (not required; worth 0, 1, or 2 points)</h1>
+<ul>
+<li>Collect Year, Director, Rating, Number of Votes and Cast (first billed only)</li>
+<li>For each actor, count how many times he or she starred in a Top 250 Movie. Show the 10 actors/actresses that starred in the most movies among the Top 250. Show the 10 actors/actresses that starred in movies among the Top 250 with the highest mean rating.</li>
+<li>For each director, count how many times he or she directed a Top 250 Movie. Show the 10 directors that directed the most movies among the Top 250. Show the 10 directors that directed movies among the Top 250 with the highest mean rating.</li>
+<li>Show the 10 most frequent Actor-Director collaborations among the Top 250 Movies. What's the average rating for those collaborations?</li>
+<li>Are ratings influenced by year? In what way? Provide a P-value using linear regression. Are the assumptions of linear regression violated? If so, what's the impact in your P-value estimate?</li>
+<li>Do people vote more often for recent movies? Provide a P-value using linear regression. Are the assumptions of linear regression violated? If so, what's the impact in your P-value estimate?</li>
+<li>In light of the previous question, do you think the number of votes influences the rating? Create an analysis of variance table for the ratings, considering year, votes and the interaction of year and votes. Explain what the interaction means.</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ...</span></code></pre>
